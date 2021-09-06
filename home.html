@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="math.js | basic usage">
+    <script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+    <script src="hill.js"></script>
+    <script src="FileSaver.js/dist/FileSaver.js"></script>
+    <link rel="icon" href="https://image.flaticon.com/icons/png/512/1808/1808972.png">
+    <link rel="stylesheet" href="style.css">
+    <title>Algoritmo de Hill</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Algoritmo de Hill</h1>
+        </div>
+        <div class="texto">
+            <h3>Texto Plano o Codificado:</h3>
+            <input id="InputTexto" type="text" placeholder="Texto plano o codificado">
+            <div id="dropTxt_zone" ondrop="dropHandlerTxt(event)" ondragover="dragOverHandlerTxt(event)">
+                <output id="DropTxt">Arrastra archivo...</output>
+            </div>
+        </div>
+        <div class="clave">
+            <h3>Clave:</h3>
+            <input id="InputClave" type="text" placeholder="Escribe una clave"> 
+            <div id="dropKey_zone" ondrop="dropHandlerKey(event)" ondragover="dragOverHandlerKey(event)">
+                <output id="DropKey">Arrastra clave...</output>
+            </div>
+        </div>
+        <div class="codificar">
+            <button id="btnCodificar" type="button" onclick="getCodifica()">Codificar</button>
+        </div>
+        <div class="limpiar">
+            <div class="btn_limpiar">
+                <button id="btnLimpiar" type="button" onclick="location.reload()"><img src="img/refresh.png" alt=""></button>
+            </div>
+        </div>
+        <div class="decodificar">
+            <button id="btnDecodificar" type="button" onclick="getDecodifica()">Decodificar</button>
+        </div>
+        <div class="resultado">
+            <output id="OutputResultado"></output>
+            <button type="button" id="download" onclick="guardar()">Descargar</button>
+        </div>
+    </div>
+</body>
+</html>
