@@ -1,4 +1,3 @@
-
 const ascii = [
   "␀","␁","␂", "␃","␄",
   "␅","␆", "␇", "␈", "␉",
@@ -51,9 +50,20 @@ const ascii = [
   "ý",  "Ý",   "¯",   "´",  "≡",
   "±",  "‗",   "¾",   "¶",  "§",
   "÷",  "¸",   "°",   "¨",  "·",
-  "¹",  "³",   "²",   "■",  " "
+  "¹",  "³",   "²",   "■",  " ",  " "
 ]
 
+//1,2,3,0,4,5,1,0,6
+//b,c,d,a,e,f,b,a,g
+//bcdaefbag
+//ehahtdinrkqopuskvlkmufñg
+// const ascii = [
+//   "a",   "b",   "c",  "d",    
+//   "e",  "f",   "g",   "h",  "i",    
+//   "j",  "k",   "l",   "m",  "n", "ñ",
+//   "o",  "p",   "q",   "r",  "s",    
+//   "t",  "u",   "v",   "w",  "x",    
+//   "y",  "z",]
 
 function dragOverHandlerTxt(event){
   // Prevent default behavior (Prevent file from being opened)
@@ -66,7 +76,7 @@ function dropHandlerTxt(ev){
   // Evitar el comportamiendo por defecto (Evitar que el fichero se abra/ejecute)
   ev.preventDefault();
   
-  console.log(math.evaluate('2+2'))
+  
   // Usar la interfaz DataTransferItemList para acceder a el/los archivos)
   for (var i = 0; i < ev.dataTransfer.items.length; i++) {
     // Si los elementos arrastrados no son ficheros, rechazarlos
@@ -171,6 +181,10 @@ function getMatrizFromText(texto,n){
   return matriz
 }
 
+function decodifica(matrizTxt,matrizKey,columns,rows){
+  console.log("Decodificando...")
+  return codifica(matrizTxt,matrizKey,columns,rows)
+}
 
 function codifica(matrizTxt,matrizKey,columns,rows){
   var res = ""
@@ -180,10 +194,11 @@ function codifica(matrizTxt,matrizKey,columns,rows){
 
     let multi = math.multiply(matrizKey,subMatrix)
     multi.forEach(function (value, index) {
-      res += ascii[(value%(ascii.length))]
+      console.log(`${index} : ${Math.round(value%(ascii.length))}`)
+      res += ascii[Math.abs(Math.round(value%(ascii.length)))]
     })
   }
-
+  console.log(res)
   return res
 }
 
@@ -204,6 +219,64 @@ function getCodifica(){
     alert("La clave ingresada parece no tener inversa. Intenta con otra clave")
   }
 }
+
+function inversoDe(det){
+  var res = 0
+  var i = 0
+  while(res != 1){
+    res = (det * i) % ascii.length 
+    i++
+  }
+  return i-1
+}
+
+function inversa(matrix,n){
+  const det = Math.round(math.det(matrix))
+  const inverso = inversoDe(det)
+  var matInversa= math.inv(matrix)
+
+  for(let i=0; i<n;i++){
+    for(let j=0; j<n; j++){
+      console.log(`${matInversa.subset(math.index(i,j))} * ${det} * ${inverso} % ${ascii.length}`)
+      let t = matInversa.subset(math.index(i,j)) * det * inverso % ascii.length
+      if (t < 0){
+        t = ascii.length + t
+      }
+      matInversa.subset(math.index(i,j),t)
+    }
+  }
+  console.log("matriz inversa: ")
+  matInversa.forEach(function (value, index) {
+    console.log(`${index} : ${value}`) 
+  })
+
+  return matInversa
+}
+
+function getDecodifica(){
+  const clave = document.getElementById("InputClave").value
+  const N = Math.ceil(math.sqrt(clave.length))
+  var claveMatriz = getMatrizFromKey(clave,N)
+  if(validaClave(claveMatriz)){
+    claveMatriz = inversa(claveMatriz,N)
+    const textoCodificado = document.getElementById("InputTexto").value
+    const textoMatriz = getMatrizFromText(textoCodificado,N)
+    const columnas = Math.ceil(textoCodificado.length/N);
+    var resultado = decodifica(textoMatriz,claveMatriz,columnas,N)
+    resultado = resultado.split("")
+    var output = ""
+    for (letra of resultado){
+      if (letra != "_"){
+        output+=letra
+      }
+    }
+    OutputResultado.value = output
+  }else{
+    alert("La clave ingresada parece no tener inversa. Intenta con otra clave")
+  }
+  
+}
+
 
 
 function guardar(){
