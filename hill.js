@@ -147,11 +147,7 @@ function getMatrizFromKey(key,n){
       matriz.subset(math.index(i,j),idx)
     } 
   }
-  console.log("key:")
-  matriz.forEach(function (value, index) {
-    console.log(`${index} : ${value}`) 
-  })
-  console.log("---------") 
+
   return matriz
 }
 
@@ -167,26 +163,18 @@ function getMatrizFromText(texto,n){
   var k = 0
   texto = texto.split("")
   for(let i=0;i<columnas;i++){
-    for(let j=0;j<n;j++){
+    for(let j=0;j<n;j++){ 
       let idx = ascii.indexOf(texto[k++])
       if(idx == -1) idx = 96 //se asigna guión bajo a lo que falte de la matriz
       matriz.subset(math.index(i,j),idx)
     }
   }
-  console.log("Text:")
-  matriz.forEach(function (value, index) {
-    console.log(`${index} : ${value}`) 
-  }) 
-  console.log("---------")
+
   return matriz
 }
 
 function decodifica(matrizTxt,matrizKey,columns,rows){
   console.log("Decodificando...")
-  return codifica(matrizTxt,matrizKey,columns,rows)
-}
-
-function codifica(matrizTxt,matrizKey,columns,rows){
   var res = ""
   for(let i=0;i<columns;i++){
     let subMatrix = matrizTxt.subset(math.index([i],math.range(0,rows)))
@@ -195,7 +183,22 @@ function codifica(matrizTxt,matrizKey,columns,rows){
     let multi = math.multiply(matrizKey,subMatrix)
     multi.forEach(function (value, index) {
       console.log(`${index} : ${Math.round(value%(ascii.length))}`)
-      res += ascii[Math.abs(Math.round(value%(ascii.length)))]
+      res += ascii[Math.round(value%(ascii.length))]
+    })
+  }
+  console.log(res)
+  return res
+}
+
+function codifica(matrizTxt,matrizKey,columns,rows){
+  var res = ""
+  for(let i=0;i<columns;i++){
+    let subMatrix = matrizTxt.subset(math.index([i],math.range(0,rows)))
+    subMatrix = math.transpose(subMatrix)
+    let multi = math.multiply(matrizKey,subMatrix)
+    multi.forEach(function (value) {
+      console.log(value%ascii.length)
+      res += ascii[value%(ascii.length)]
     })
   }
   console.log(res)
@@ -224,20 +227,19 @@ function inversoDe(det){
   var res = 0
   var i = 0
   while(res != 1){
-    res = (det * i) % ascii.length 
     i++
+    res = (det * i) % ascii.length 
   }
-  return i-1
+  return i
 }
 
 function inversa(matrix,n){
-  const det = Math.round(math.det(matrix))
+  const det = Math.abs(Math.round(math.det(matrix)))
   const inverso = inversoDe(det)
   var matInversa= math.inv(matrix)
 
   for(let i=0; i<n;i++){
     for(let j=0; j<n; j++){
-      console.log(`${matInversa.subset(math.index(i,j))} * ${det} * ${inverso} % ${ascii.length}`)
       let t = matInversa.subset(math.index(i,j)) * det * inverso % ascii.length
       if (t < 0){
         t = ascii.length + t
@@ -245,10 +247,6 @@ function inversa(matrix,n){
       matInversa.subset(math.index(i,j),t)
     }
   }
-  console.log("matriz inversa: ")
-  matInversa.forEach(function (value, index) {
-    console.log(`${index} : ${value}`) 
-  })
 
   return matInversa
 }

@@ -160,11 +160,13 @@ input{
   border: 5px dotted black;
   width:  200px;
   height: 100px;
+  margin-top: 20px;
   text-align: center;
 }
 #dropKey_zone {
   border: 5px dotted black;
   width:  200px;
   height: 100px;
+  margin-top: 20px;
   text-align: center;
 }
